@@ -6,7 +6,7 @@
 /*   By: jeshin <jeshin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/25 15:45:41 by jeshin            #+#    #+#             */
-/*   Updated: 2023/10/31 22:00:25 by jeshin           ###   ########.fr       */
+/*   Updated: 2023/11/02 19:38:00 by jeshin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,7 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	ret[i] = 0;
 	return (ret);
 }
-#include <stdio.h>
+
 char	*get_line(char **buf)
 {
 	char	*front;
@@ -79,19 +79,19 @@ char	*get_line(char **buf)
 	i = 0;
 	while ((*buf)[i] && (*buf)[i] != '\n')
 		i++;
-	front = (char *)malloc(sizeof(char) * (i + 2));
+	front = (char *)malloc(sizeof(char) * (i + 1));
 	back = (char *)malloc(sizeof(char) * (ft_strlen(*buf) - i + 1));
 	i = 0;
-	while((*buf)[i] && (*buf)[i] != '\n'){
+	while ((*buf)[i] && (*buf)[i] != '\n')
+	{
 		front[i] = (*buf)[i];
 		i++;
 	}
 	front[i++] = '\n';
-	front[i] = 0;
 	j = 0;
 	if ((*buf)[i] && (*buf)[i] == '\n')
 		i++;
-	while((*buf)[i])
+	while ((*buf)[i])
 		back[j++] = (*buf)[i++];
 	back[j] = 0;
 	*buf = back;

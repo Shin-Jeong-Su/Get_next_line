@@ -6,7 +6,7 @@
 /*   By: jeshin <jeshin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/24 13:54:39 by jeshin            #+#    #+#             */
-/*   Updated: 2023/10/31 22:01:38 by jeshin           ###   ########.fr       */
+/*   Updated: 2023/11/02 19:27:46 by jeshin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,13 +24,13 @@
 //buf랑 ret이 0로 끝나지 않음. 기존에 작성한 ft_strlen, ft_strchr, ft_strjoin
 //적용가능?
 #include "get_next_line.h"
-#include <stdio.h>
+
 char	*get_next_line(int fd)
 {
 	char		*buf;
 	static char	*ret;
 
-	if (fd < 0|| (fd >= 1 && fd <= 2) || fd > OPEN_MAX)
+	if (fd < 0 || (fd >= 1 && fd <= 2) || fd > OPEN_MAX)
 		return (0);
 	buf = (char *)malloc(sizeof(char) * BUFFER_SIZE + 1);
 	if (!buf)
@@ -39,10 +39,9 @@ char	*get_next_line(int fd)
 	while (read(fd, buf, BUFFER_SIZE))
 	{
 		ret = ft_strjoin(ret, buf);
-		//printf("buf : %s\n",buf);
-		//printf("ret : %s\n",ret);
-		if(ft_strchr(buf, '\n')){
-			return(get_line(&ret));
+		if (ft_strchr(buf, '\n'))
+		{
+			return (get_line(&ret));
 		}
 	}
 	return (0);
