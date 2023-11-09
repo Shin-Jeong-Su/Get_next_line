@@ -6,7 +6,7 @@
 /*   By: jeshin <jeshin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/25 15:45:41 by jeshin            #+#    #+#             */
-/*   Updated: 2023/11/02 19:38:00 by jeshin           ###   ########.fr       */
+/*   Updated: 2023/11/09 23:22:38 by jeshin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,39 @@ size_t	ft_strlen(const char *s)
 	return (i);
 }
 
+void	len_check(char const *s, unsigned int start, size_t *len)
+{
+	if (start >= ft_strlen(s))
+		*len = 0;
+	else
+	{
+		if (start + *len > ft_strlen(s))
+			*len = ft_strlen(s) - start;
+	}
+}
+
+char	*ft_substr(char const *s, unsigned int start, size_t len)
+{
+	char	*ret;
+	size_t	i;
+	size_t	j;
+	
+	len_check(s, start, &len);
+	ret = (char *)malloc(sizeof(char) * (len + 1));
+	if (!ret)
+		return (0);
+	i = 0;
+	j = 0;
+	while (s[i] && j < len)
+	{
+		if (i >= start)
+			ret[j++] = s[i];
+		i++;
+	}
+	ret[j] = 0;
+	return (ret);
+}
+
 char	*ft_strjoin(char const *s1, char const *s2)
 {
 	char	*ret;
@@ -67,33 +100,4 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	}
 	ret[i] = 0;
 	return (ret);
-}
-
-char	*get_line(char **buf)
-{
-	char	*front;
-	char	*back;
-	int		i;
-	int		j;
-
-	i = 0;
-	while ((*buf)[i] && (*buf)[i] != '\n')
-		i++;
-	front = (char *)malloc(sizeof(char) * (i + 1));
-	back = (char *)malloc(sizeof(char) * (ft_strlen(*buf) - i + 1));
-	i = 0;
-	while ((*buf)[i] && (*buf)[i] != '\n')
-	{
-		front[i] = (*buf)[i];
-		i++;
-	}
-	front[i++] = '\n';
-	j = 0;
-	if ((*buf)[i] && (*buf)[i] == '\n')
-		i++;
-	while ((*buf)[i])
-		back[j++] = (*buf)[i++];
-	back[j] = 0;
-	*buf = back;
-	return (front);
 }

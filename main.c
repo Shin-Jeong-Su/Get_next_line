@@ -9,7 +9,7 @@ int main(int argc, char **argv)
 	char *str;
 	if (argc == 1)
 	{
-		printf("%s\n", get_next_line(0));
+		printf("%s", get_next_line(0));
 	}
 	else
 	{
@@ -18,9 +18,7 @@ int main(int argc, char **argv)
 			if ((fd = open(argv[i], O_RDONLY)) < 0)
 				printf("%s is can't open", argv[i]);
 			while ((str = get_next_line(fd)))
-			{
-				printf("%s", str);
-			}
+				printf("%s",str);
 			i++;
 		}
 	}

@@ -1,0 +1,7 @@
+{
+	"files.associations": {
+		"file_utils.h": "c",
+		"utils.h": "c",
+		"fcntl.h": "c"
+	}
+}

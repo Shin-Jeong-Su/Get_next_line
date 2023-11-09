@@ -6,7 +6,7 @@
 /*   By: jeshin <jeshin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/24 13:55:12 by jeshin            #+#    #+#             */
-/*   Updated: 2023/11/02 19:44:07 by jeshin           ###   ########.fr       */
+/*   Updated: 2023/11/09 23:51:57 by jeshin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,13 +15,15 @@
 
 # include <unistd.h>
 # include <stdlib.h>
-# include <limits.h>
 
-# define BUFFER_SIZE
+# ifndef BUFFER_SIZE
+#  define BUFFER_SIZE 5
+# endif
 
 char	*get_next_line(int fd);
 char	*ft_strchr(const char *s, int c);
 char	*ft_strjoin(char const *s1, char const *s2);
 size_t	ft_strlen(const char *s);
-char	*get_line(char **buf);
+char	*ft_substr(char const *s, unsigned int start, size_t len);
+
 #endif
