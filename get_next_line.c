@@ -6,54 +6,82 @@
 /*   By: jeshin <jeshin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/24 13:54:39 by jeshin            #+#    #+#             */
-/*   Updated: 2023/11/09 23:57:55 by jeshin           ###   ########.fr       */
+/*   Updated: 2023/11/14 17:44:54 by jeshin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-char	*get_line_m(char **buf)
+static char	*get_line_m(char **bkup,int *rd_val)
 {
-	char	*front;
-	char	*back;
-	size_t		i;
+	static char		*front;
+	static char		*back;
+	char			*tmp;
+	size_t			i;
+	size_t			bkup_size;
 
-	i = 0;
-	while((*buf)[i]){
-		i++;	
-		if((*buf)[i]=='\n')
-			break;
+	bkup_size = ft_strlen(*bkup);
+	if (!*rd_val)
+	{
+		if(**bkup)
+		{
+			tmp = ft_substr(*bkup,0,bkup_size);
+			free(*bkup);
+			*bkup = 0;
+			return (tmp);
+		}
+		else
+			return (0);
 	}
-	front = ft_substr(*buf,0,i);
-	back = ft_substr(*buf, i + 1, ft_strlen(*buf) - i);
-	*buf = back;
+	i = 0;
+	while ((*bkup)[i] && (*bkup)[i] != '\n')
+		i++;
+	if (front)
+		free(front);
+	front = ft_substr(*bkup, 0, (i + 1));
+	if (!back)
+		back = ft_substr(*bkup, i + 1, bkup_size - (i + 1));
+	else
+	{
+		tmp = back;
+		back = ft_substr(*bkup, i + 1, bkup_size - (i + 1));
+		free(tmp);
+	}
+	*bkup = back;
 	return (front);
 }
 
 char	*get_next_line(int fd)
 {
-	char		*buf;
 	int			rd_val;
-	static char	*ret;
+	char		buf[BUFFER_SIZE+1];
+	static char	*bkup;
+	char		*tmp_bkup;
 
-	buf = (char *)malloc(sizeof(char) * (BUFFER_SIZE + 1));
-	if (!buf)
+	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (0);
-	buf[BUFFER_SIZE]=0;
-	while(1)
+	while (1)
 	{
-		rd_val = read(fd,buf,BUFFER_SIZE);
+		rd_val = read(fd, buf, BUFFER_SIZE);
 		if (rd_val < 0)
-		{
-			free(buf);
-			free(ret);
 			return (0);
+		buf[rd_val] = 0;
+		if (!rd_val)
+		{
+			if (!bkup)
+				return (0);
+			return (get_line_m(&bkup, &rd_val));
 		}
-		else if(!rd_val)
-			return (get_line_m(&ret));
-		ret=ft_strjoin(ret,buf);
-		if (ft_strchr(ret, '\n'))
-			return (get_line_m(&ret));
+		if (!bkup)
+			bkup = ft_strjoin(bkup, buf);
+		else
+		{
+			tmp_bkup = bkup;
+			bkup = ft_strjoin(bkup, buf);
+			free(tmp_bkup);
+		}
+		if (ft_strchr(bkup, '\n'))
+			return (get_line_m(&bkup,&rd_val));
 	}
 	return (0);
 }

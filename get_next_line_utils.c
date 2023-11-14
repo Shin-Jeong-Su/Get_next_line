@@ -6,7 +6,7 @@
 /*   By: jeshin <jeshin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/25 15:45:41 by jeshin            #+#    #+#             */
-/*   Updated: 2023/11/09 23:22:38 by jeshin           ###   ########.fr       */
+/*   Updated: 2023/11/14 15:18:17 by jeshin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ char	*ft_substr(char const *s, unsigned int start, size_t len)
 	char	*ret;
 	size_t	i;
 	size_t	j;
-	
+
 	len_check(s, start, &len);
 	ret = (char *)malloc(sizeof(char) * (len + 1));
 	if (!ret)
