@@ -6,57 +6,72 @@
 /*   By: jeshin <jeshin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/24 13:54:39 by jeshin            #+#    #+#             */
-/*   Updated: 2023/11/14 17:44:54 by jeshin           ###   ########.fr       */
+/*   Updated: 2023/11/17 20:25:39 by jeshin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-static char	*get_line_m(char **bkup,int *rd_val)
+char	*get_line_till_lf(char **bkup)
 {
-	static char		*front;
-	static char		*back;
-	char			*tmp;
-	size_t			i;
-	size_t			bkup_size;
+	char		*front;
+	char		*tmp_fre;
+	size_t		i;
 
-	bkup_size = ft_strlen(*bkup);
-	if (!*rd_val)
-	{
-		if(**bkup)
-		{
-			tmp = ft_substr(*bkup,0,bkup_size);
-			free(*bkup);
-			*bkup = 0;
-			return (tmp);
-		}
-		else
-			return (0);
-	}
 	i = 0;
 	while ((*bkup)[i] && (*bkup)[i] != '\n')
 		i++;
-	if (front)
-		free(front);
 	front = ft_substr(*bkup, 0, (i + 1));
-	if (!back)
-		back = ft_substr(*bkup, i + 1, bkup_size - (i + 1));
+	tmp_fre = *bkup;
+	if (ft_strlen(*bkup) == i + 1)
+		*bkup = 0;
+	else
+		*bkup = ft_substr(*bkup, i + 1, ft_strlen(*bkup) - (i + 1));
+	free(tmp_fre);
+	return (front);
+}
+
+char	*get_line_remains(char **bkup)
+{
+	char		*remains;
+
+	if (!*bkup)
+		return (0);
+	else if (ft_strchr(*bkup, '\n'))
+		return (get_line_till_lf(bkup));
+	remains = ft_substr(*bkup, 0, ft_strlen(*bkup));
+	free(*bkup);
+	*bkup = 0;
+	return (remains);
+}
+
+char	*is_read_error(char **bkup)
+{
+	if (*bkup)
+		free(*bkup);
+	*bkup = 0;
+	return (0);
+}
+
+void	new_bkup(char **bkup, char *buf)
+{
+	char		*tmp_fre;
+
+	if (!*bkup)
+		*bkup = ft_strjoin(*bkup, buf);
 	else
 	{
-		tmp = back;
-		back = ft_substr(*bkup, i + 1, bkup_size - (i + 1));
-		free(tmp);
+		tmp_fre = *bkup;
+		*bkup = ft_strjoin(*bkup, buf);
+		free(tmp_fre);
 	}
-	*bkup = back;
-	return (front);
 }
 
 char	*get_next_line(int fd)
 {
 	int			rd_val;
-	char		buf[BUFFER_SIZE+1];
+	char		buf[BUFFER_SIZE + 1];
 	static char	*bkup;
-	char		*tmp_bkup;
 
 	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (0);
@@ -64,24 +79,13 @@ char	*get_next_line(int fd)
 	{
 		rd_val = read(fd, buf, BUFFER_SIZE);
 		if (rd_val < 0)
-			return (0);
+			return (is_read_error(&bkup));
 		buf[rd_val] = 0;
 		if (!rd_val)
-		{
-			if (!bkup)
-				return (0);
-			return (get_line_m(&bkup, &rd_val));
-		}
-		if (!bkup)
-			bkup = ft_strjoin(bkup, buf);
-		else
-		{
-			tmp_bkup = bkup;
-			bkup = ft_strjoin(bkup, buf);
-			free(tmp_bkup);
-		}
+			return (get_line_remains(&bkup));
+		new_bkup(&bkup, buf);
 		if (ft_strchr(bkup, '\n'))
-			return (get_line_m(&bkup,&rd_val));
+			return (get_line_till_lf(&bkup));
 	}
 	return (0);
 }

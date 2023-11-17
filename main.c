@@ -2,16 +2,16 @@
 #include "get_next_line.h"
 #include <fcntl.h>
 
-void check_leak(void)
+void	check_leak(void)
 {
 	system("leaks --list -- a.out");
 }
 
-int main(int argc, char **argv)
+int	main(int argc, char **argv)
 {
-	int i;
-	int fd;
-	char *str;
+	int		i;
+	int		fd;
+	char	*str;
 
 	i = 1;
 	if (argc == 1)
