@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_t_list_utils_bonus.c                        :+:      :+:    :+:   */
+/*   get_next_line_utils_bonus.c                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jeshin <jeshin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/11/17 21:56:01 by jeshin            #+#    #+#             */
-/*   Updated: 2023/11/19 18:36:15 by jeshin           ###   ########.fr       */
+/*   Created: 2023/11/22 18:20:52 by jeshin            #+#    #+#             */
+/*   Updated: 2023/11/22 19:37:04 by jeshin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,24 +40,16 @@ size_t	ft_strlen(const char *s)
 	return (i);
 }
 
-void	len_check(char const *s, unsigned int start, size_t *len)
-{
-	if (start >= ft_strlen(s))
-		*len = 0;
-	else
-	{
-		if (start + *len > ft_strlen(s))
-			*len = ft_strlen(s) - start;
-	}
-}
-
 char	*ft_substr(char const *s, unsigned int start, size_t len)
 {
 	char	*ret;
 	size_t	i;
 	size_t	j;
 
-	len_check(s, start, &len);
+	if (start >= ft_strlen(s))
+		len = 0;
+	else if (start + len > ft_strlen(s))
+		len = ft_strlen(s) - start;
 	ret = (char *)malloc(sizeof(char) * (len + 1));
 	if (!ret)
 		return (0);
@@ -100,4 +92,16 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	}
 	ret[i] = 0;
 	return (ret);
+}
+
+int	new_bkup(char **bkup, char *buf)
+{
+	char		*tmp_fre;
+
+	tmp_fre = *bkup;
+	*bkup = ft_strjoin(*bkup, buf);
+	if (*bkup == 0)
+		return (0);
+	free(tmp_fre);
+	return (1);
 }

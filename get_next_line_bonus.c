@@ -6,7 +6,7 @@
 /*   By: jeshin <jeshin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/21 14:57:46 by jeshin            #+#    #+#             */
-/*   Updated: 2023/11/22 18:07:16 by jeshin           ###   ########.fr       */
+/*   Updated: 2023/11/22 19:34:14 by jeshin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,10 +20,10 @@ t_list	*make_chunk(int fd)
 	ret->fd = fd;
 	ret->bkup = 0;
 	ret->next = 0;
-	return(ret);
+	return (ret);
 }
 
-t_list		*get_chunk(t_list **lst, int fd)
+t_list	*get_chunk(t_list **lst, int fd)
 {
 	t_list	*ret;
 	t_list	*new;
@@ -38,8 +38,8 @@ t_list		*get_chunk(t_list **lst, int fd)
 	{
 		if (ret->fd == fd)
 			return (ret);
-		if(ret->next == 0)
-			break;
+		if (ret->next == 0)
+			break ;
 		ret = ret->next;
 	}
 	new = make_chunk(fd);
@@ -47,14 +47,12 @@ t_list		*get_chunk(t_list **lst, int fd)
 	return (new);
 }
 
-char	*del_chunk(t_list **lst,t_list *chunk)
+char	*del_chunk(t_list **lst, t_list *chunk)
 {
 	t_list	*tmp;
 
-	if(*lst == chunk)
-	{
+	if (*lst == chunk)
 		*lst = (*lst)->next;
-	}
 	else
 	{
 		tmp = *lst;
@@ -68,55 +66,40 @@ char	*del_chunk(t_list **lst,t_list *chunk)
 	return (0);
 }
 
-char	*get_line_till_lf(char **bkup)
+char	*_get_line(t_list **lst, t_list *chunk)
 {
-	char		*front;
+	char		*ret;
 	char		*tmp_fre;
 	size_t		i;
+	size_t		bkup_size;
 
-	i = 0;
-	while ((*bkup)[i] && (*bkup)[i] != '\n')
-		i++;
-	front = ft_substr(*bkup, 0, (i + 1));
-	tmp_fre = *bkup;
-	if (ft_strlen(*bkup) == i + 1)
-		*bkup = 0;
-	else
-		*bkup = ft_substr(*bkup, i + 1, ft_strlen(*bkup) - (i + 1));
-	free(tmp_fre);
-	return (front);
-}
-
-char	*get_line_remains(t_list **lst,t_list *chunk)
-{
-	char		*remains;
-
-	if (!*(chunk->bkup))
+	bkup_size = ft_strlen(chunk->bkup);
+	if (ft_strchr(chunk->bkup, '\n'))
 	{
-		del_chunk(lst,chunk);
-		return (0);
+		i = 0;
+		while ((chunk->bkup)[i] && ((chunk->bkup))[i] != '\n')
+			i++;
+		ret = ft_substr((chunk->bkup), 0, (i + 1));
+		tmp_fre = (chunk->bkup);
+		if (bkup_size == i + 1)
+			(chunk->bkup) = 0;
+		else
+			(chunk->bkup) = ft_substr(chunk->bkup, i + 1, bkup_size - (i + 1));
+		free(tmp_fre);
+		return (ret);
 	}
-	if (ft_strchr(chunk->bkup,'\n'))
-	 	return (get_line_till_lf(&(chunk->bkup)));
-	remains = ft_substr(chunk->bkup, 0, ft_strlen(chunk->bkup));
+	if (!*(chunk->bkup))
+		return (del_chunk(lst, chunk));
+	ret = ft_substr(chunk->bkup, 0, bkup_size);
 	del_chunk(lst, chunk);
-	return (remains);
-}
-
-void	new_bkup(char **bkup,char *buf)
-{
-	char		*tmp_fre;
-
-	tmp_fre = *bkup;
-	*bkup = ft_strjoin(*bkup, buf);
-	free(tmp_fre);
+	return (ret);
 }
 
 char	*get_next_line(int fd)
 {
 	static t_list	*lst;
 	t_list			*chunk;
-	char			buf[BUFFER_SIZE+1];
+	char			buf[BUFFER_SIZE + 1];
 	int				rd_val;
 
 	if (fd < 0 || BUFFER_SIZE <= 0)
@@ -127,15 +110,13 @@ char	*get_next_line(int fd)
 	while (1)
 	{
 		rd_val = read(fd, buf, BUFFER_SIZE);
-		if(rd_val < 0)
-			return (del_chunk(&lst,chunk));
+		if (rd_val < 0)
+			return (del_chunk(&lst, chunk));
 		buf[rd_val] = 0;
-		new_bkup(&(chunk->bkup),buf);
-		if(rd_val < BUFFER_SIZE)
-			return (get_line_remains(&lst, chunk));
-		if(ft_strchr(chunk->bkup,'\n'))
-			return (get_line_till_lf(&(chunk->bkup)));
-		
+		if (new_bkup(&(chunk->bkup), buf) == 0)
+			return (0);
+		if (rd_val < BUFFER_SIZE || ft_strchr(chunk->bkup, '\n'))
+			return (_get_line(&lst, chunk));
 	}
 	return (0);
 }

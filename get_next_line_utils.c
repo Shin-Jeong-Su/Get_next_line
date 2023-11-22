@@ -6,7 +6,7 @@
 /*   By: jeshin <jeshin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/25 15:45:41 by jeshin            #+#    #+#             */
-/*   Updated: 2023/11/14 15:18:17 by jeshin           ###   ########.fr       */
+/*   Updated: 2023/11/22 19:11:33 by jeshin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,24 +40,16 @@ size_t	ft_strlen(const char *s)
 	return (i);
 }
 
-void	len_check(char const *s, unsigned int start, size_t *len)
-{
-	if (start >= ft_strlen(s))
-		*len = 0;
-	else
-	{
-		if (start + *len > ft_strlen(s))
-			*len = ft_strlen(s) - start;
-	}
-}
-
 char	*ft_substr(char const *s, unsigned int start, size_t len)
 {
 	char	*ret;
 	size_t	i;
 	size_t	j;
 
-	len_check(s, start, &len);
+	if (start >= ft_strlen(s))
+		len = 0;
+	else if (start + len > ft_strlen(s))
+		len = ft_strlen(s) - start;
 	ret = (char *)malloc(sizeof(char) * (len + 1));
 	if (!ret)
 		return (0);
