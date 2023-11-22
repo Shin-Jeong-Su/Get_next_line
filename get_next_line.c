@@ -6,7 +6,7 @@
 /*   By: jeshin <jeshin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/24 13:54:39 by jeshin            #+#    #+#             */
-/*   Updated: 2023/11/17 20:25:39 by jeshin           ###   ########.fr       */
+/*   Updated: 2023/11/21 15:35:01 by jeshin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ char	*get_line_remains(char **bkup)
 	return (remains);
 }
 
-char	*is_read_error(char **bkup)
+char	*free_bkup(char **bkup)
 {
 	if (*bkup)
 		free(*bkup);
@@ -79,7 +79,7 @@ char	*get_next_line(int fd)
 	{
 		rd_val = read(fd, buf, BUFFER_SIZE);
 		if (rd_val < 0)
-			return (is_read_error(&bkup));
+			return (free_bkup(&bkup));
 		buf[rd_val] = 0;
 		if (!rd_val)
 			return (get_line_remains(&bkup));

@@ -9,7 +9,7 @@
 			"request": "launch",
 			"name": "Debug",
 			"program": "${workspaceFolder}/a.out",
-			"args": ["multiple_nl.txt","multiple_nl.txt","multiple_nl.txt"],
+			"args": ["one_char.txt","one_char.txt"],
 			"cwd": "${workspaceFolder}"
 		}
 	]
