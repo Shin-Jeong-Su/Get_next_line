@@ -6,16 +6,17 @@
 /*   By: jeshin <jeshin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/24 13:54:39 by jeshin            #+#    #+#             */
-/*   Updated: 2023/11/22 20:34:53 by jeshin           ###   ########.fr       */
+/*   Updated: 2023/11/23 20:36:40 by jeshin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-char	*free_bkup(char **bkup)
+void	*free_bkup(char **bkup)
 {
-	if (*bkup)
-		free(*bkup);
+	if (!bkup)
+		return (0);
+	free(*bkup);
 	*bkup = 0;
 	return (0);
 }
@@ -23,7 +24,7 @@ char	*free_bkup(char **bkup)
 char	*_get_line(char **bkup)
 {
 	char		*ret;
-	char		*tmp_fre;
+	char		*tmp;
 	size_t		i;
 	size_t		bkup_size;
 
@@ -34,16 +35,16 @@ char	*_get_line(char **bkup)
 		while ((*bkup)[i] && (*bkup)[i] != '\n')
 			i++;
 		ret = ft_substr(*bkup, 0, (i + 1));
-		tmp_fre = *bkup;
 		if (bkup_size == i + 1)
-			*bkup = 0;
+			tmp = 0;
 		else
-			*bkup = ft_substr(*bkup, i + 1, bkup_size - (i + 1));
-		free(tmp_fre);
+			tmp = ft_substr(*bkup, i + 1, bkup_size - (i + 1));
+		free(*bkup);
+		*bkup = tmp;
 		return (ret);
 	}
 	if (!**bkup)
-		return (free_bkup(bkup));
+		return ((char *)free_bkup(bkup));
 	ret = ft_substr(*bkup, 0, ft_strlen(*bkup));
 	free_bkup(bkup);
 	return (ret);
@@ -51,13 +52,16 @@ char	*_get_line(char **bkup)
 
 int	new_bkup(char **bkup, char *buf)
 {
-	char		*tmp_fre;
+	char		*ret;
 
-	tmp_fre = *bkup;
-	*bkup = ft_strjoin(*bkup, buf);
-	if (*bkup == 0)
+	ret = ft_strjoin(*bkup, buf);
+	if (ret == 0)
+	{
+		free_bkup(bkup);
 		return (0);
-	free(tmp_fre);
+	}
+	free(*bkup);
+	*bkup = ret;
 	return (1);
 }
 
@@ -73,7 +77,7 @@ char	*get_next_line(int fd)
 	{
 		rd_val = read(fd, buf, BUFFER_SIZE);
 		if (rd_val < 0)
-			return (free_bkup(&bkup));
+			return ((char *)free_bkup(&bkup));
 		buf[rd_val] = 0;
 		if (new_bkup(&bkup, buf) == 0)
 			return (0);

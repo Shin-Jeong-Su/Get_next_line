@@ -6,7 +6,7 @@
 /*   By: jeshin <jeshin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/21 14:57:46 by jeshin            #+#    #+#             */
-/*   Updated: 2023/11/22 19:34:14 by jeshin           ###   ########.fr       */
+/*   Updated: 2023/11/23 20:32:39 by jeshin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,7 +105,7 @@ char	*get_next_line(int fd)
 	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (0);
 	chunk = get_chunk(&lst, fd);
-	if (chunk == 0)
+	if (!chunk)
 		return (0);
 	while (1)
 	{
@@ -114,7 +114,7 @@ char	*get_next_line(int fd)
 			return (del_chunk(&lst, chunk));
 		buf[rd_val] = 0;
 		if (new_bkup(&(chunk->bkup), buf) == 0)
-			return (0);
+			return (del_chunk(&lst, chunk));
 		if (rd_val < BUFFER_SIZE || ft_strchr(chunk->bkup, '\n'))
 			return (_get_line(&lst, chunk));
 	}

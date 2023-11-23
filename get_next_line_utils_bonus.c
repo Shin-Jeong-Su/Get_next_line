@@ -6,7 +6,7 @@
 /*   By: jeshin <jeshin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/22 18:20:52 by jeshin            #+#    #+#             */
-/*   Updated: 2023/11/22 19:37:04 by jeshin           ###   ########.fr       */
+/*   Updated: 2023/11/23 20:24:24 by jeshin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,12 +96,12 @@ char	*ft_strjoin(char const *s1, char const *s2)
 
 int	new_bkup(char **bkup, char *buf)
 {
-	char		*tmp_fre;
+	char		*ret;
 
-	tmp_fre = *bkup;
-	*bkup = ft_strjoin(*bkup, buf);
-	if (*bkup == 0)
+	ret = ft_strjoin(*bkup, buf);
+	if (!ret)
 		return (0);
-	free(tmp_fre);
+	free(*bkup);
+	*bkup = ret;
 	return (1);
 }
