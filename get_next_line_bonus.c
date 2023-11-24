@@ -6,7 +6,7 @@
 /*   By: jeshin <jeshin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/21 14:57:46 by jeshin            #+#    #+#             */
-/*   Updated: 2023/11/23 20:32:39 by jeshin           ###   ########.fr       */
+/*   Updated: 2023/11/24 15:59:04 by jeshin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,8 @@ t_list	*make_chunk(int fd)
 	t_list	*ret;
 
 	ret = malloc(sizeof(t_list));
+	if (!ret)
+		return (0);
 	ret->fd = fd;
 	ret->bkup = 0;
 	ret->next = 0;
