@@ -6,7 +6,7 @@
 /*   By: jeshin <jeshin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/21 14:57:46 by jeshin            #+#    #+#             */
-/*   Updated: 2023/11/24 15:59:04 by jeshin           ###   ########.fr       */
+/*   Updated: 2023/11/24 18:29:41 by jeshin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,6 +82,8 @@ char	*_get_line(t_list **lst, t_list *chunk)
 		while ((chunk->bkup)[i] && ((chunk->bkup))[i] != '\n')
 			i++;
 		ret = ft_substr((chunk->bkup), 0, (i + 1));
+		if (!ret)
+			return (del_chunk(lst, chunk));
 		tmp_fre = (chunk->bkup);
 		if (bkup_size == i + 1)
 			(chunk->bkup) = 0;

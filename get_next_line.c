@@ -6,7 +6,7 @@
 /*   By: jeshin <jeshin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/24 13:54:39 by jeshin            #+#    #+#             */
-/*   Updated: 2023/11/23 20:36:40 by jeshin           ###   ########.fr       */
+/*   Updated: 2023/11/24 18:29:28 by jeshin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,8 @@ char	*_get_line(char **bkup)
 		while ((*bkup)[i] && (*bkup)[i] != '\n')
 			i++;
 		ret = ft_substr(*bkup, 0, (i + 1));
+		if (!ret)
+			return ((char *)free_bkup(bkup));
 		if (bkup_size == i + 1)
 			tmp = 0;
 		else
